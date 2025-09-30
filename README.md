@@ -4,6 +4,15 @@ This is a list app where users can sign up and, once logged in, add and remove i
 
 ## Project Setup
 
+### Environment variables
+
+Add the required environment variables in the following format to `.env.local`:
+
+```sh
+VITE_APP_SUPABASE_URL="https://link.supabase.co"
+VITE_APP_SUPABASE_KEY="required-key"
+```
+
 ```sh
 npm install
 ```
