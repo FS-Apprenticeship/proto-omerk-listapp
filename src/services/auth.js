@@ -12,3 +12,41 @@ export async function getAllTodos(supa) {
   const { data } = await supa.from('todos').select()
   return data
 }
+
+export async function signUp(supa, email, password) {
+  // returns user/session info
+  const { data, error } = await supa.auth.signUp({
+    email,
+    password,
+  })
+  if (error) {
+    throw error
+  }
+  return data
+}
+
+export async function signIn(supa, email, password) {
+  const { data, error } = await supa.auth.signInWithPassword({
+    email,
+    password,
+  })
+  if (error) {
+    throw error
+  }
+  return data // contains session, user
+}
+
+export async function signOut(supa) {
+  const { error } = await supa.auth.signOut()
+  if (error) {
+    throw error
+  }
+}
+
+export async function getCurrentUser(supa) {
+  const { data, error } = await supa.auth.getUser()
+  if (error) {
+    throw error
+  }
+  return data.user
+}
