@@ -1,15 +1,44 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Navbar from '../components/NavBar.vue'
+import { getAllTodos, createTodo, deleteTodo, getAllLists } from '@/services/dbData'
+import { supa } from '@/services/auth'
 
+const todos = ref([])
 const todoItem = ref('')
 
-function getTodo() {
-  console.log('Item added: ', todoItem.value)
+// Load todos when page mounts
+onMounted(async () => {
+  try {
+    todos.value = await getAllTodos(supa)
+  } catch (err) {
+    console.error('Failed to load todos', err)
+  }
+})
+
+// TODO: find which list we are on through some state and then pass it through addTodo function
+async function addTodo(supa) {
+  if (!todoItem.value.trim()) return
+  try {
+
+    // TEMP: just add it to default list
+    const lists = await getAllLists(supa)
+
+    const newTodo = await createTodo(supa, { title: todoItem.value, list_id: lists[0].id })
+    todos.value.unshift(newTodo) // add to top of list
+    todoItem.value = '' // clear input
+  } catch (err) {
+    console.error('Create failed', err)
+  }
 }
 
-function deleteTodo() {
-  console.log('Deleted item: ')
+async function removeTodo(supa, id) {
+  try {
+    const deleted = await deleteTodo(supa, id)
+    todos.value = todos.value.filter(t => t.id !== deleted.id)
+  } catch (err) {
+    console.error('Delete failed', err)
+  }
 }
 </script>
 
@@ -18,12 +47,26 @@ function deleteTodo() {
     <Navbar />
     <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
       <h1 class="text-2xl font-bold mb-4">Your Todo List</h1>
-      <ul class="space-y-2">
-        <li class="flex justify-between items-center bg-gray-100 px-3 py-2 rounded">
-          <span>Sample Todo Item</span>
-          <button @click="deleteTodo" class="text-red-500">Delete</button>
+
+      <!-- Todo list -->
+      <ul v-if="todos.length" class="space-y-2">
+        <li
+          v-for="todo in todos"
+          :key="todo.id"
+          class="flex justify-between items-center bg-gray-100 px-3 py-2 rounded"
+        >
+          <span>{{ todo.title }}</span>
+          <button
+            @click="removeTodo(supa, todo.id)"
+            class="text-red-500 hover:text-red-700"
+          >
+            Delete
+          </button>
         </li>
       </ul>
+      <p v-else class="text-gray-500">No todos yet. Add one below!</p>
+
+      <!-- Add new todo -->
       <div class="mt-4 flex space-x-2">
         <input
           type="text"
@@ -31,7 +74,10 @@ function deleteTodo() {
           placeholder="New Todo"
           class="flex-1 border px-3 py-2 rounded"
         />
-        <button @click="getTodo" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        <button
+          @click="addTodo(supa)"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
           Add
         </button>
       </div>
