@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Navbar from '../components/NavBar.vue'
-import { getAllTodos, createTodo, deleteTodo, getAllLists } from '@/services/dbData'
+import { getAllTodos, createTodo, deleteTodo, updateTodo, getAllLists } from '@/services/dbData'
 import { supa } from '@/services/auth'
 
 const todos = ref([])
@@ -32,6 +32,17 @@ async function addTodo(supa) {
   }
 }
 
+async function toggleTodoCompleted(supa, todo) {
+  try {
+    const updated = await updateTodo(supa, todo.id, { completed: !todo.completed })
+    todos.value = todos.value.map(t =>
+      t.id === updated.id ? updated : t
+    )
+  } catch (err) {
+    console.error('Toggle failed', err)
+  }
+}
+
 async function removeTodo(supa, id) {
   try {
     const deleted = await deleteTodo(supa, id)
@@ -49,21 +60,20 @@ async function removeTodo(supa, id) {
       <h1 class="text-2xl font-bold mb-4">Your Todo List</h1>
 
       <!-- Todo list -->
-      <ul v-if="todos.length" class="space-y-2">
-        <li
-          v-for="todo in todos"
-          :key="todo.id"
-          class="flex justify-between items-center bg-gray-100 px-3 py-2 rounded"
-        >
-          <span>{{ todo.title }}</span>
-          <button
-            @click="removeTodo(supa, todo.id)"
-            class="text-red-500 hover:text-red-700"
-          >
+      <ul v-if="todos.length > 0" class="space-y-2">
+        <li v-for="todo in todos" :key="todo.id" class="flex justify-between items-center bg-gray-100 px-3 py-2 rounded">
+          <div class="flex items-center space-x-3">
+            <input type="checkbox" :checked="todo.completed" @change="toggleTodoCompleted(supa, todo)" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+            <span :class="{ 'line-through text-gray-500': todo.completed }">
+              {{ todo.title }}
+            </span>
+          </div>
+          <button @click="removeTodo(supa, todo.id)" class="text-red-500 hover:text-red-700">
             Delete
           </button>
         </li>
       </ul>
+
       <p v-else class="text-gray-500">No todos yet. Add one below!</p>
 
       <!-- Add new todo -->
