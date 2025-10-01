@@ -22,9 +22,7 @@ export async function signUp(supa, email, password) {
     email,
     password,
   })
-  if (error) {
-    throw error
-  }
+  if (error) throw error
   return data
 }
 

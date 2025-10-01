@@ -2,15 +2,22 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Navbar from '../components/NavBar.vue'
+import { supa, signIn } from '@/services/auth'
 
 const email = ref('')
 const password = ref('')
 const router = useRouter()
 
-function mockSignIn() {
-  console.log('Mock Sign In:', email.value, password.value)
-  router.push('/todos') // redirect to Todo page
+async function signInHelper(supa) {
+  const { data, error } = await signIn(supa, email.value, password.value)
+  if (error) {
+    throw error;
+  } else {
+    router.push('/lists')
+  }
 }
+
+
 </script>
 
 <template>
@@ -18,7 +25,7 @@ function mockSignIn() {
     <Navbar />
     <div class="bg-white p-8 rounded shadow-md w-80">
       <h2 class="text-2xl font-bold mb-6 text-center">Sign In</h2>
-      <form @submit.prevent="mockSignIn" class="flex flex-col space-y-4">
+      <form @submit.prevent="signInHelper(supa)" class="flex flex-col space-y-4">
         <input type="email" placeholder="Email" v-model="email" class="border px-3 py-2 rounded" />
         <input
           type="password"
