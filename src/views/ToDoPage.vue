@@ -1,30 +1,28 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import Navbar from '../components/NavBar.vue'
-import { getAllTodos, createTodo, deleteTodo, updateTodo, getAllLists } from '@/services/dbData'
+import { getAllTodos, createTodo, deleteTodo, updateTodo } from '@/services/dbData'
 import { supa } from '@/services/auth'
 
 const todos = ref([])
 const todoItem = ref('')
+const route = useRoute()
+const list_id = route.params.list_id
 
 // Load todos when page mounts
 onMounted(async () => {
   try {
-    todos.value = await getAllTodos(supa)
+    todos.value = await getAllTodos(supa, list_id)
   } catch (err) {
     console.error('Failed to load todos', err)
   }
 })
 
-// TODO: find which list we are on through some state and then pass it through addTodo function
 async function addTodo(supa) {
   if (!todoItem.value.trim()) return
   try {
-
-    // TEMP: just add it to default list
-    const lists = await getAllLists(supa)
-
-    const newTodo = await createTodo(supa, { title: todoItem.value, list_id: lists[0].id })
+    const newTodo = await createTodo(supa, { title: todoItem.value, list_id: list_id})
     todos.value.unshift(newTodo) // add to top of list
     todoItem.value = '' // clear input
   } catch (err) {
