@@ -1,9 +1,13 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { supa, signOut } from '@/services/auth'
 
 const route = useRoute()
-// const showSignOut = computed(() => route.path === '/todos')
+const router = useRouter()
+
+// function for WHEN to display the sign out button
+// this assumes todos and lists can only be accessed when auth == true
 const showSignOut = computed(() => {
   if (route.path.includes('/todos')) {
     return true
@@ -13,6 +17,16 @@ const showSignOut = computed(() => {
     return false
   }
 })
+
+// helper function to actually sign the person out
+async function signOutHelper(supa) {
+  try {
+    await signOut(supa);
+    router.push('/')
+  } catch (e) {
+    throw new e;
+  }
+}
 </script>
 
 <template>
@@ -20,7 +34,7 @@ const showSignOut = computed(() => {
     <div class="font-bold text-xl">My Todo App</div>
     <button
       v-if="showSignOut"
-      @click="$router.push('/')"
+      @click="signOutHelper(supa)"
       class="bg-white text-blue-600 px-3 py-1 rounded"
     >
       Sign Out

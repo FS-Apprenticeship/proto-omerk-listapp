@@ -9,7 +9,9 @@ const password = ref('')
 const router = useRouter()
 
 async function signInHelper(supa) {
-  const { data, error } = await signIn(supa, email.value, password.value)
+  // dont need to destructure to data, error here
+  // just error should be fine
+  const { error } = await signIn(supa, email.value, password.value)
   if (error) {
     throw error;
   } else {

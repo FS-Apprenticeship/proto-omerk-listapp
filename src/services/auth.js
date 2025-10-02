@@ -4,7 +4,11 @@ function getClient() {
   const url = import.meta.env.VITE_APP_SUPABASE_URL
   const key = import.meta.env.VITE_APP_SUPABASE_KEY
 
-  const supabase = createClient(url, key)
+  const supabase = createClient(url, key, {
+    auth: {
+      persistSession: true,
+    },
+  })
   return supabase
 }
 
@@ -42,6 +46,7 @@ export async function signOut(supa) {
   if (error) {
     throw error
   }
+  return true
 }
 
 export async function getCurrentUser(supa) {
