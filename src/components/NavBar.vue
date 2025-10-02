@@ -3,7 +3,16 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const showSignOut = computed(() => route.path === '/todos')
+// const showSignOut = computed(() => route.path === '/todos')
+const showSignOut = computed(() => {
+  if (route.path.includes('/todos')) {
+    return true
+  } else if (route.path === '/lists') {
+    return true
+  } else {
+    return false
+  }
+})
 </script>
 
 <template>
