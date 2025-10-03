@@ -12,7 +12,6 @@ function getClient() {
   return supabase
 }
 
-// we are exporting the client now, not the getClient method
 export const supa = getClient()
 
 export async function getAllTodos(supa) {
@@ -20,8 +19,8 @@ export async function getAllTodos(supa) {
   return data
 }
 
+// still using the signUp function in SignUpPage.vue
 export async function signUp(supa, email, password) {
-  // returns user/session info
   const { data, error } = await supa.auth.signUp({
     email,
     password,
@@ -30,6 +29,7 @@ export async function signUp(supa, email, password) {
   return data
 }
 
+// DEPRECATED
 export async function signIn(supa, email, password) {
   const { data, error } = await supa.auth.signInWithPassword({
     email,

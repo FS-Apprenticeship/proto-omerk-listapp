@@ -1,17 +1,19 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { supa, signUp } from '@/services/auth'
+import { signUp } from '@/services/auth'
+import { useAuthStore } from '@/stores/users'
 
+const userStore = useAuthStore()
 const router = useRouter()
+
 const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const successMessage = ref('')
 
-async function signUpHelper(supa) {
-
-  const { data, error } = await signUp(supa, email.value, password.value)
+async function signUpHelper() {
+  const { data, error } = await signUp(userStore.client, email.value, password.value)
   if (error) {
     errorMessage.value = error.message
   } else {
@@ -28,7 +30,7 @@ async function signUpHelper(supa) {
     <div class="bg-white p-8 rounded shadow w-full max-w-md">
       <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
 
-      <form @submit.prevent="signUpHelper(supa)" class="space-y-4">
+      <form @submit.prevent="signUpHelper()" class="space-y-4">
         <input
           v-model="email"
           type="email"
