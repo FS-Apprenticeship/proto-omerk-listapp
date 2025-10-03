@@ -9,10 +9,27 @@ const router = useRouter()
 
 const email = ref('')
 const password = ref('')
+const confirmPassword = ref('')
 const errorMessage = ref('')
 const successMessage = ref('')
 
 async function signUpHelper() {
+  const emailPattern = "/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/"
+  if (!emailPattern.test(email.value)) {
+    errorMessage.value = 'Please enter a valid email address.'
+    return
+  }
+
+  if (password.value.length < 6) {
+    errorMessage.value = 'Password must be at least 6 characters long.'
+    return
+  }
+
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = 'Passwords do not match.'
+    return
+  }
+
   const { data, error } = await signUp(userStore.client, email.value, password.value)
   if (error) {
     errorMessage.value = error.message
@@ -30,25 +47,13 @@ async function signUpHelper() {
     <div class="bg-white p-8 rounded shadow w-full max-w-md">
       <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
 
-      <form @submit.prevent="signUpHelper()" class="space-y-4">
+      <form @submit.prevent="signUpHelper" class="space-y-4">
+        <input v-model="email" type="email" placeholder="Email" required class="w-full px-3 py-2 border rounded" />
+        <input v-model="password" type="password" placeholder="Password" required
+          class="w-full px-3 py-2 border rounded" />
         <input
-          v-model="email"
-          type="email"
-          placeholder="Email"
-          required
-          class="w-full px-3 py-2 border rounded"
-        />
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          required
-          class="w-full px-3 py-2 border rounded"
-        />
-        <button
-          type="submit"
-          class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
-        >
+          v-model="confirmPassword" type="password" placeholder="Confirm Password" required class="w-full px-3 py-2 border rounded" />
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
           Sign Up
         </button>
       </form>
