@@ -9,8 +9,8 @@ const routes = [
   { path: '/', component: LandingPage },
   { path: '/signup', component: SignUpPage },
   { path: '/signin', component: SignInPage },
-  { path: '/lists', component: ListsPage },
-  { path: '/todos/:list_id', component: ToDoPage },
+  { path: '/lists', component: ListsPage},
+  { path: '/todos/:list_id', component: ToDoPage},
 ]
 
 const router = createRouter({

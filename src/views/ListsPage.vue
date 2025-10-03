@@ -2,20 +2,25 @@
 import { ref, onMounted } from 'vue'
 import Navbar from '../components/NavBar.vue'
 import { getAllLists, createList, deleteList } from '@/services/dbData'
-import { supa } from '@/services/auth'
 import { useRouter } from 'vue-router'
 
+import { useAuthStore } from '@/stores/users'
+
+const userStore = useAuthStore()
 const router = useRouter()
 const lists = ref([])
 const newListName = ref('')
 
 onMounted(async () => {
+  if (!userStore.isLoggedIn) {
+    router.push('/signin')
+  }
   await loadLists()
 })
 
 async function loadLists() {
   try {
-    lists.value = await getAllLists(supa)
+    lists.value = await getAllLists(userStore.client)
   } catch (err) {
     console.error('Failed to load lists', err)
   }
@@ -24,7 +29,7 @@ async function loadLists() {
 async function addList() {
   if (!newListName.value.trim()) return
   try {
-    await createList(supa, newListName.value)
+    await createList(userStore.client, newListName.value)
     newListName.value = ''
     await loadLists()
   } catch (err) {
@@ -34,7 +39,7 @@ async function addList() {
 
 async function removeList(list_id) {
   try {
-    await deleteList(supa, list_id)
+    await deleteList(userStore.client, list_id)
     await loadLists()
   } catch (err) {
     console.error('Delete list failed', err)
