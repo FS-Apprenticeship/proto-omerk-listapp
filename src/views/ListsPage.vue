@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Navbar from '../components/NavBar.vue'
-import { getAllLists, createList, deleteList } from '@/services/dbData'
+import { getAllLists, createList, deleteList } from '@/services/listData'
 import { useRouter } from 'vue-router'
 
 import { useAuthStore } from '@/stores/users'

@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '../components/NavBar.vue'
-import { getAllTodos, createTodo, deleteTodo, updateTodo } from '@/services/dbData'
+import { getAllTodos, createTodo, deleteTodo, updateTodo } from '@/services/todoData'
 
 import router from '@/router'
 import { useAuthStore } from '@/stores/users'
