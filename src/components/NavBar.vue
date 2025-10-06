@@ -13,12 +13,12 @@ async function signOutHelper() {
 </script>
 
 <template>
-  <nav class="bg-blue-600 text-white px-6 py-3 flex justify-between items-center">
+  <nav class="bg-gray-900 border-b border-gray-800 text-white px-6 py-4 flex justify-between items-center">
     <div class="font-bold text-xl">My Todo App</div>
     <button
       v-if="showSignOut"
       @click="signOutHelper()"
-      class="bg-white text-blue-600 px-3 py-1 rounded"
+      class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 border border-gray-700 transition-colors font-medium"
     >
       Sign Out
     </button>

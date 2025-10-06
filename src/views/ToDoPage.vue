@@ -58,42 +58,43 @@ async function removeTodo(id) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-950">
     <Navbar />
-    <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-      <h1 class="text-2xl font-bold mb-4">Your Todo List</h1>
+    <div class="max-w-2xl mx-auto mt-10 px-4">
+      <div class="bg-gray-900 border border-gray-800 rounded-lg p-8 shadow-xl">
+        <h1 class="text-3xl font-bold mb-6 text-white">Your Todo List</h1>
 
-      <!-- Todo list -->
-      <ul v-if="todos.length > 0" class="space-y-2">
-        <li v-for="todo in todos" :key="todo.id" class="flex justify-between items-center bg-gray-100 px-3 py-2 rounded">
-          <div class="flex items-center space-x-3">
-            <input type="checkbox" :checked="todo.completed" @change="toggleTodoCompleted(todo)" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-            <span :class="{ 'line-through text-gray-500': todo.completed }">
-              {{ todo.title }}
-            </span>
-          </div>
-          <button @click="removeTodo(todo.id)" class="text-red-500 hover:text-red-700">
-            Delete
+        <!-- Add new todo -->
+        <div class="mb-6 flex gap-2">
+          <input type="text" v-model="todoItem" placeholder="Add a new todo..."
+            class="flex-1 bg-gray-800 border border-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500"
+            @keyup.enter="addTodo()" />
+          <button @click="addTodo()"
+            class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+            Add
           </button>
-        </li>
-      </ul>
+        </div>
 
-      <p v-else class="text-gray-500">No todos yet. Add one below!</p>
+        <!-- Todo list -->
+        <ul v-if="todos.length > 0" class="space-y-2">
+          <li v-for="todo in todos" :key="todo.id"
+            class="flex justify-between items-center bg-gray-800 border border-gray-700 px-4 py-3 rounded-lg hover:bg-gray-750 transition-colors">
+            <div class="flex items-center gap-3 flex-1">
+              <input type="checkbox" :checked="todo.completed" @change="toggleTodoCompleted(todo)"
+                class="h-5 w-5 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer" />
+              <span :class="{ 'line-through text-gray-500': todo.completed, 'text-white': !todo.completed }"
+                class="text-lg">
+                {{ todo.title }}
+              </span>
+            </div>
+            <button @click="removeTodo(todo.id)"
+              class="text-red-400 hover:text-red-300 transition-colors font-medium ml-4">
+              Delete
+            </button>
+          </li>
+        </ul>
 
-      <!-- Add new todo -->
-      <div class="mt-4 flex space-x-2">
-        <input
-          type="text"
-          v-model="todoItem"
-          placeholder="New Todo"
-          class="flex-1 border px-3 py-2 rounded"
-        />
-        <button
-          @click="addTodo()"
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Add
-        </button>
+        <p v-else class="text-gray-500 text-center py-8">No todos yet. Add one above!</p>
       </div>
     </div>
   </div>

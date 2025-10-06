@@ -52,48 +52,48 @@ function goToList(id) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-950">
     <Navbar />
-    <div class="max-w-3xl mx-auto mt-10">
-      <h1 class="text-3xl font-bold mb-6">Your Lists</h1>
+    <div class="max-w-3xl mx-auto mt-10 px-4">
+      <h1 class="text-3xl font-bold mb-6 text-white">Your Lists</h1>
 
-      <!-- Grid of lists -->
+      <!-- Add new list -->
+      <div class="mt-8 flex space-x-2 mb-6">
+        <input
+          v-model="newListName"
+          type="text"
+          placeholder="New list name"
+          class="flex-1 bg-gray-900 border border-gray-800 text-white placeholder-gray-500 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        <button
+          @click="addList"
+          class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+        >
+          Add List
+        </button>
+      </div>
+
+      <!-- Cards of lists available -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           v-for="list in lists"
           :key="list.id"
-          class="bg-white rounded shadow p-4 cursor-pointer hover:shadow-md transition"
+          class="bg-gray-900 border border-gray-800 rounded-lg shadow-lg p-6 cursor-pointer hover:border-gray-700 hover:shadow-xl transition-all"
           @click="goToList(list.id)"
         >
           <div class="flex justify-between items-start">
             <div>
-              <h2 class="text-xl font-semibold">{{ list.list_name }}</h2>
-              <p class="text-gray-500">{{ list.todos[0].count }} items</p>
+              <h2 class="text-xl font-semibold text-white">{{ list.list_name }}</h2>
+              <p class="text-gray-400 mt-1">{{ list.todos[0].count }} items</p>
             </div>
             <button
               @click.stop="removeList(list.id)"
-              class="text-red-500 hover:text-red-700"
+              class="text-red-400 hover:text-red-300 transition-colors font-medium"
             >
               Delete
             </button>
           </div>
         </div>
-      </div>
-
-      <!-- Add new list -->
-      <div class="mt-6 flex space-x-2">
-        <input
-          v-model="newListName"
-          type="text"
-          placeholder="New list name"
-          class="flex-1 border px-3 py-2 rounded"
-        />
-        <button
-          @click="addList"
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Add List
-        </button>
       </div>
     </div>
   </div>

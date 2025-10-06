@@ -14,7 +14,7 @@ const errorMessage = ref('')
 const successMessage = ref('')
 
 async function signUpHelper() {
-  const emailPattern = "/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/"
+  const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
   if (!emailPattern.test(email.value)) {
     errorMessage.value = 'Please enter a valid email address.'
     return
@@ -30,7 +30,7 @@ async function signUpHelper() {
     return
   }
 
-  const { data, error } = await signUp(userStore.client, email.value, password.value)
+  const { error } = await signUp(userStore.client, email.value, password.value)
   if (error) {
     errorMessage.value = error.message
   } else {
@@ -43,27 +43,35 @@ async function signUpHelper() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-screen bg-gray-50">
-    <div class="bg-white p-8 rounded shadow w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-950">
+    <div class="bg-gray-900 p-8 rounded-lg shadow-xl w-full max-w-md border border-gray-800">
+      <h2 class="text-3xl font-bold mb-8 text-center text-white">Sign Up</h2>
 
-      <form @submit.prevent="signUpHelper" class="space-y-4">
-        <input v-model="email" type="email" placeholder="Email" required class="w-full px-3 py-2 border rounded" />
-        <input v-model="password" type="password" placeholder="Password" required
-          class="w-full px-3 py-2 border rounded" />
-        <input
-          v-model="confirmPassword" type="password" placeholder="Confirm Password" required class="w-full px-3 py-2 border rounded" />
-        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+      <form @submit.prevent="signUpHelper()" class="space-y-5">
+        <div>
+          <input v-model="email" type="email" placeholder="Email" required
+            class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" />
+        </div>
+        <div>
+          <input v-model="password" type="password" placeholder="Password" required
+            class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" />
+        </div>
+        <div>
+          <input v-model="confirmPassword" type="password" placeholder="Confirm Password" required
+            class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" />
+        </div>
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 mt-2">
           Sign Up
         </button>
       </form>
 
-      <p v-if="errorMessage" class="mt-4 text-red-600">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="mt-4 text-green-600">{{ successMessage }}</p>
+      <p v-if="errorMessage" class="mt-5 text-red-400 text-sm text-center">{{ errorMessage }}</p>
+      <p v-if="successMessage" class="mt-5 text-green-400 text-sm text-center">{{ successMessage }}</p>
 
-      <p class="mt-6 text-center">
+      <p class="mt-8 text-center text-gray-400 text-sm">
         Already have an account?
-        <router-link to="/signin" class="text-blue-600 hover:underline">
+        <router-link to="/signin" class="text-blue-400 hover:text-blue-300 font-medium transition-colors">
           Sign In
         </router-link>
       </p>
