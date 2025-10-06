@@ -12,9 +12,6 @@ const lists = ref([])
 const newListName = ref('')
 
 onMounted(async () => {
-  if (!userStore.isLoggedIn) {
-    router.push('/signin')
-  }
   await loadLists()
 })
 

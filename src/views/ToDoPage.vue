@@ -5,7 +5,6 @@ import Navbar from '../components/NavBar.vue'
 import { getAllTodos, createTodo, deleteTodo, updateTodo } from '@/services/todoData'
 import { getList } from '@/services/listData'
 
-import router from '@/router'
 import { useAuthStore } from '@/stores/users'
 
 const userStore = useAuthStore()
@@ -17,9 +16,6 @@ const list_name = ref('')
 
 // Load todos when page mounts
 onMounted(async () => {
-  if (!userStore.isLoggedIn) {
-    router.push('/signin')
-  }
   try {
     todos.value = await getAllTodos(userStore.client, list_id)
     list_name.value = getListName(list_id)
