@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '../components/NavBar.vue'
 import { getAllTodos, createTodo, deleteTodo, updateTodo } from '@/services/todoData'
+import { getList } from '@/services/listData'
 
 import router from '@/router'
 import { useAuthStore } from '@/stores/users'
@@ -12,6 +13,7 @@ const todos = ref([])
 const todoItem = ref('')
 const route = useRoute()
 const list_id = route.params.list_id
+const list_name = ref('')
 
 // Load todos when page mounts
 onMounted(async () => {
@@ -20,6 +22,7 @@ onMounted(async () => {
   }
   try {
     todos.value = await getAllTodos(userStore.client, list_id)
+    list_name.value = getListName(list_id)
   } catch (err) {
     console.error('Failed to load todos', err)
   }
@@ -47,6 +50,10 @@ async function toggleTodoCompleted(todo) {
   }
 }
 
+async function getListName() {
+    return await getList(userStore.client, list_id).then(x => list_name.value = x.list_name)
+}
+
 async function removeTodo(id) {
   try {
     const deleted = await deleteTodo(userStore.client, id)
@@ -62,7 +69,7 @@ async function removeTodo(id) {
     <Navbar />
     <div class="max-w-2xl mx-auto mt-10 px-4">
       <div class="bg-gray-900 border border-gray-800 rounded-lg p-8 shadow-xl">
-        <h1 class="text-3xl font-bold mb-6 text-white">Your Todo List</h1>
+        <h1 class="text-3xl font-bold mb-6 text-white">{{ list_name }}</h1>
 
         <!-- Add new todo -->
         <div class="mb-6 flex gap-2">

@@ -28,6 +28,20 @@ export async function createList(supa, list_name) {
   return data
 }
 
+export async function getList(supa, list_id) {
+  const user = await getCurrentUser(supa)
+  if (!user) throw new Error('Not authenticated')
+
+  const { data, error } = await supa
+    .from('lists')
+    .select('id, list_name')
+    .eq("id", list_id)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
 export async function deleteList(supa, list_id) {
   const { data, error } = await supa.from('lists').delete().eq('id', list_id).select().single()
 
