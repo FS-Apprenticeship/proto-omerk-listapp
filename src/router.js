@@ -24,13 +24,16 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const userStore = useAuthStore(pinia)
   const listStore = useListStore(pinia)
+  await userStore.loadUser()
   if (to.meta.requiresAuth && !userStore.isLoggedIn) {
     next('/signin')
   } else {
-    listStore.getCurrentLists()
+    if (userStore.isLoggedIn) {
+      listStore.getCurrentLists()
+    }
     next()
   }
 })

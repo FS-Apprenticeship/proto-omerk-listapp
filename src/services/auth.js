@@ -7,6 +7,8 @@ function getClient() {
   const supabase = createClient(url, key, {
     auth: {
       persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
     },
   })
   return supabase

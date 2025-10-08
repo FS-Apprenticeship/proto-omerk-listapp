@@ -16,23 +16,33 @@ export const useAuthStore = defineStore('user', {
     },
 
     actions: {
-        async login(supa, email, password) {
-          const { data, error } = await supa.auth.signInWithPassword({
-            email, password,
-          })
-          if (error) throw error
-          this.user = data.user
+      async loadUser() {
+        const { data } = await supa.auth.getSession()
+        this.user = data.session?.user || null
+        if (this.user !== null) {
           this.loggedIn = true
-          router.push('/lists')
-        },
-
-        async logout(supa) {
-          const { error } = await supa.auth.signOut()
-          if (error) throw error
-          console.log("pinia logout")
-          this.user = null
-          this.loggedIn = false
-          router.push('/')
+        } else {
+          console.log("user not logged in")
         }
+      },
+
+      async login(supa, email, password) {
+        const { data, error } = await supa.auth.signInWithPassword({
+          email, password,
+        })
+        if (error) throw error
+        this.user = data.user
+        this.loggedIn = true
+        router.push('/lists')
+      },
+
+      async logout(supa) {
+        const { error } = await supa.auth.signOut()
+        if (error) throw error
+        console.log("pinia logout")
+        this.user = null
+        this.loggedIn = false
+        router.push('/')
+      },
     }
 });
