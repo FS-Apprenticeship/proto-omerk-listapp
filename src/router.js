@@ -7,6 +7,7 @@ import ToDoPage from './views/ToDoPage.vue'
 
 import { pinia } from './main'
 import { useAuthStore } from './stores/users'
+import { useListStore } from './stores/lists'
 
 const routes = [
   { path: '/', component: LandingPage },
@@ -25,9 +26,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useAuthStore(pinia)
+  const listStore = useListStore(pinia)
   if (to.meta.requiresAuth && !userStore.isLoggedIn) {
     next('/signin')
   } else {
+    listStore.getCurrentLists()
     next()
   }
 })

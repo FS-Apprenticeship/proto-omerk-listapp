@@ -1,23 +1,23 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Navbar from '../components/NavBar.vue'
-import { getAllLists, createList, deleteList } from '@/services/listData'
 import { useRouter } from 'vue-router'
 
-import { useAuthStore } from '@/stores/users'
+import { useListStore } from '@/stores/lists'
 
-const userStore = useAuthStore()
+const listStore = useListStore()
 const router = useRouter()
 const lists = ref([])
 const newListName = ref('')
 
 onMounted(async () => {
-  await loadLists()
+  loadLists()
 })
 
-async function loadLists() {
+function loadLists() {
   try {
-    lists.value = await getAllLists(userStore.client)
+    lists.value = listStore.getLocalLists
+    // lists.value = await getAllLists(userStore.client)
   } catch (err) {
     console.error('Failed to load lists', err)
   }
@@ -26,9 +26,10 @@ async function loadLists() {
 async function addList() {
   if (!newListName.value.trim()) return
   try {
-    await createList(userStore.client, newListName.value)
+    // listStore.createLocalLists(userStore.user.id, newListName.value)
+    await listStore.createRemoteList(newListName.value)
     newListName.value = ''
-    await loadLists()
+    loadLists()
   } catch (err) {
     console.error('Create list failed', err)
   }
@@ -36,8 +37,8 @@ async function addList() {
 
 async function removeList(list_id) {
   try {
-    await deleteList(userStore.client, list_id)
-    await loadLists()
+    await listStore.removeRemoteList(list_id)
+    loadLists()
   } catch (err) {
     console.error('Delete list failed', err)
   }
