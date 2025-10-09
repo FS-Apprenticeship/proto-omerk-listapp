@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
     next('/signin')
   } else {
     if (userStore.isLoggedIn) {
-      listStore.getCurrentLists()
+      await listStore.getCurrentLists()
     }
     next()
   }
